@@ -1,8 +1,8 @@
 { 
     "base": {
         "name": "Web Site Name",
-        "port": 6789,
-        "domain": "http://localhost:6789",
+        "port": 3000,
+        "domain": "",
         "identityKey": "",
         "secret": "",
         "salt": ""

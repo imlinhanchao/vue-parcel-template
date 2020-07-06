@@ -1,4 +1,5 @@
 let express = require('express');
+let fs = require('fs');
 let path = require('path');
 let favicon = require('serve-favicon');
 let logger = require('morgan');
@@ -10,8 +11,14 @@ let FileStore = require('session-file-store')(session);
 let partials = require('express-partials');
 let files = require('./lib/files');
 
+if (!fs.existsSync(path.join(__dirname, 'config.json'))) {
+    console.info('[Info] Please execute `npm run init` to initialization config.')
+    process.exit(0);
+}
+
+
 let api = require('./routes/api');
-let config = require(process.cwd() + '/config');
+let config = require('./config');
 
 let app = express();
 
