@@ -9,6 +9,22 @@ const routers = [{
     props: {
         loginPage: false
     },
+    children: [
+        {
+            path: '',
+            meta: {
+                title: 'Home'
+            },
+            component: () => import('./views/home')
+        },
+        {
+            path: 'u/:user',
+            meta: {
+                title: 'User'
+            },
+            component: () => import('./views/user')
+        }
+    ]
 }, {
     path: '*',
     redirect: '/'
