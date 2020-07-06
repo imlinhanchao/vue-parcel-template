@@ -29,7 +29,8 @@
     "sequelize": "^6.3.0",
     "serve-favicon": "^2.5.0",
     "session-file-store": "^1.4.0",
-    "svg-captcha": "^1.4.0"
+    "svg-captcha": "^1.4.0",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^2.3.0",
