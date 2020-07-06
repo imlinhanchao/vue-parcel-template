@@ -16,7 +16,6 @@ if (!fs.existsSync(path.join(__dirname, 'config.json'))) {
     process.exit(0);
 }
 
-
 let api = require('./routes/api');
 let config = require('./config');
 
@@ -27,8 +26,6 @@ files.mkdir(path.join(__dirname, 'public'));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-app.locals['CONFIG'] = config.web;
 
 // uncomment after placing your favicon in /public
 app.use(robots({ UserAgent: '*', Disallow: '/' }));

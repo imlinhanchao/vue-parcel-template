@@ -32,7 +32,7 @@ async function main() {
 
     if (config.base['identityKey'] == ''
         || await rl.inputData('Do you want to reset safe key config (identityKey etc.) ?', 'N') == 'Y') {
-        config.base['identityKey'] = '_SNIPPET_SESSION_ID_' + randomStr();
+        config.base['identityKey'] = '_WEB_SESSION_ID_' + randomStr();
         config.base['secret'] = randomStr() + randomStr();
         config.base['salt'] = randomUp(uuidv4());
     }
