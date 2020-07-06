@@ -12,7 +12,7 @@ async function main() {
         rl.inputData = function (key, defaultVal) {
             return new Promise((resolve, reject) => {
                 try {
-                    this.question(`${key}: ` + (defaultVal ? `[${defaultVal}]` : ''), function (val) {
+                    this.question(`${key} ${(defaultVal ? `[${defaultVal}]` : '')}: `, function (val) {
                         resolve(val || defaultVal);
                     });
                 } catch (error) {
@@ -33,7 +33,7 @@ async function main() {
 
         fs.writeFile(path.join(__dirname, '../model/config.json'),
             JSON.stringify({ db: config }, null, 4), (err) => {
-                if (err) console.error(`create db config failed: ${err.message}`);
+                if (err) console.error(`[Error] create db config failed: ${err.message}`);
                 else initDB();
             });
         rl.close();
@@ -49,17 +49,17 @@ function initDB () {
             let table = process.argv[2];
             if (model[table]) {
                 await model[table].sync({ force: true });
-                console.info(`Init model ${table} finish.`);
+                console.info(`[Success] Init model ${table} finish.`);
             }
             else {
-                console.error(`Model ${table} not found!`);
+                console.error(`[Error] Model ${table} not found!`);
             }
         } else {
             try {
                 await model.sync();
-                console.info('Init all model finish.');
+                console.info('[Success] Init all model finish.');
             } catch (err) {
-                console.error(`Init database model failed: ${err.message}`);                
+                console.error(`[Error] Init database model failed: ${err.message}`);                
             }
         }
         process.exit();
