@@ -44,8 +44,8 @@ env.js
 # upload directory
 upload/
 
-# db config
-model/config.json
+# config file
+config.json
 
 # Mac Temp file
 .DS_Store
