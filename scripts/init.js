@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
-const uuidv4 = require('uuid').v4;
+const { v4: uuidv4 } = require('uuid');
 let config = require(
     fs.existsSync(path.join(__dirname, '..', 'config.json')) ?
     '../config' : '../cfg'
