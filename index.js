@@ -57,8 +57,9 @@ app.use(
 
 app.use(bundler.middleware());
 
-if (process.platform == 'wind32') {
-    cmd = 'start';
+let cmd;
+if (process.platform == 'win32') {
+    cmd = 'explorer';
 } else if (process.platform == 'linux') {
     cmd = 'xdg-open';
 } else if (process.platform == 'darwin') {
