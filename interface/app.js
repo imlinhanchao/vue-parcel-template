@@ -44,6 +44,31 @@ class App {
         }
     }
 
+    // 通用统计接口
+    async count(data, Model, ops, field='id') {
+        let keys = Model.keys();
+
+        keys = ['id'].concat(keys).concat(['create_time', 'update_time']);
+        
+        data = data || {};
+        
+        // 生成查询条件
+        let q = { where: {} };
+        data = App.filter(data, keys);
+        q.where = App.where(data, ops);
+        q.group = field;
+
+        let datalist = [], total = 0;
+        try {
+            q.attributes = [[Model.db.fn('COUNT', Model.db.col(field)), 'count'], field];
+            total = await Model.findAll(q); // 获取总数
+            return total;
+        } catch (err) {
+            if (err.isdefine) throw (err);
+            throw (App.error.db(err));
+        }
+    }
+
     // 通用查询接口
     async query(data, Model, ops) {
         let keys = Model.keys();
@@ -63,7 +88,8 @@ class App {
 
         // 生成排序，默认以创建时间降序
         data.order = data.order || [];
-        data.order.push(['create_time', 'DESC']);
+        if (!data.order.find(o => o == 'create_time' || o[0] == 'create_time'))
+            data.order.push(['create_time', 'DESC']);
         q.order = App.order(data.order, keys);
 
         let datalist = [], total = 0;
@@ -239,6 +265,14 @@ class App {
             if (keys.indexOf(key) < 0) return false;
         }
         return true;
+    }
+
+    static isSame(data1, data2, keys = null) {
+        if (keys == null) {
+            keys = Array.from(new Set(Object.keys(data1).concat(Object.keys(data2))));
+        }
+
+        return keys.find(k => data1[k] != data2[k]) == null;
     }
 
     // 更新数据到对象
