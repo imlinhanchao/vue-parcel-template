@@ -43,6 +43,8 @@ async function main() {
     
     config.file['maxSize'] = await rl.inputData('Max Size File Upload(MB)', config.file['maxSize']);
     
+    console.info('Config Database:');
+
     config.db['port'] = parseInt(await rl.inputData('Database Port', config.db['port']));
     config.db['database'] = await rl.inputData('Database Name', config.db['database']);
     config.db['prefix'] = await rl.inputData('Table Prefix', config.db['prefix']);
@@ -53,7 +55,7 @@ async function main() {
     dbConfig['user'] = await rl.inputData('Database User', 'root');
     dbConfig['password'] = await rl.inputData('Database Password', '');
     
-    if (await rl.inputData('Do you config WeiXin? ', 'Y') == 'Y') {
+    if (await rl.inputData('Do you config WeiXin? ', 'N') == 'Y') {
         config.weixin['appid'] = await rl.inputData('App Id', config.weixin['appid']);
         config.weixin['appsecret'] = await rl.inputData('App Secret', config.weixin['appsecret']);
         config.weixin['encodingAESKey'] = await rl.inputData('Encoding AESKey', config.weixin['encodingAESKey']);        
@@ -76,6 +78,7 @@ async function main() {
         });
     rl.close();
 
+    fs.mkdir(path.join(__dirname, '..', 'public', 'dist'), () => {})
 }
 
 function initDB () {
