@@ -2,6 +2,8 @@
 @import './fontawesome/font-awesome.less';
 @import './font.less';
 
+@primary-color: #24292e;
+
 html {
     min-height: 100%;
     width: 100%;
@@ -18,4 +20,19 @@ body {
 
 .ivu-layout {
     background-color: transparent; 
+}
+a {
+    color: inherit;
+}
+
+::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+}
+::-webkit-scrollbar-thumb {
+    background: #f0f0f0;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
 }

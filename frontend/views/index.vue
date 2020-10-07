@@ -11,19 +11,20 @@
             <router-view />
         </Content>
         <Footer class="layout-footer">
-            <p>&copy; 2020 ~ {{new Date().getFullYear()}} Hancel. All rights reserved.</p>
+            <p>&copy; {{new Date().getFullYear()}} <a href ="https://github.com/imlinhanchao/" target="_black" >Hancel</a> Open Source. <br>All rights reserved. </p>
         </Footer>
     </Layout>
 </template>
 <script>
 export default {
     name: "index",
-    mounted() {
-        this.$store.dispatch('account/checklogin', (rsp, err) => { 
-            if (!this.$root.accessCheck(this.$route) && to.route.path != '/') {
-                this.$router.replace('/login');
-            }
-        });
+    components: {
+    },
+    async mounted() {
+        let rsp = await this.$store.dispatch('account/checklogin');
+        if(this.$route.meta.login && !this.$root.isLogin) {
+            this.$root.plsLogin();
+        }
     },
     data() {
         return {};
