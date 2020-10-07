@@ -1,9 +1,11 @@
+import './vendors'
+import 'regenerator-runtime/runtime'
 import Vue from 'vue'
 import Vuex from 'vuex';
 import App from './app.vue'
-import iView from 'iview'
+import iView from 'iview';
 import VueRouter from 'vue-router';
-import Routers from './router';
+import Routers from './router/index';
 import store from './store';
 import Util from './util';
 import 'iview/dist/styles/iview.css'
@@ -19,8 +21,10 @@ Vue.config.productionTip = isDebug;
 // axios config
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = '/api/';
+Vue.prototype.$win = window;
 Vue.prototype.$axios = axios;
 Vue.prototype.$util = Util;
+Vue.prototype.$config = config;
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -35,7 +39,7 @@ const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
-    Util.title(to.meta.title);
+    if(!to.meta.notitle) Util.title(to.meta.title);
     next();
 });
 
@@ -66,6 +70,10 @@ new Vue({
             let img = name.indexOf('http') == 0 ? name : config.file.fileurl + name;
             return name ? img : defaults;
         },
+        plsLogin() {
+            localStorage.setItem('redirect', this.$route.path);
+            this.$router.replace('/login');
+        }
     },
     computed: {
         maxSize() {
@@ -82,6 +90,17 @@ new Vue({
         },
         isLogin() {
             return this.$store.getters['account/isLogin'];
-        },
+        }
+    },
+    watch: {
+        $route(to, from) {
+            console.info(to);
+            if (to.path == '/login') {
+                localStorage.setItem('redirect', from.path);
+            }
+        }
+    },
+    mounted() {
+        document.getElementById('loading').style.display = 'none';
     }
 });
