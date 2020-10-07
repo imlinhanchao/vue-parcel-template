@@ -68,21 +68,19 @@
   </Layout>
 </template>
 <script>
-import config from "../../config.json";
-
 export default {
     name: "user",
     mounted() {
-        this.init();
+        this.Init();
     },
     data() {
         return {
             info: {
-                id: "",
-                username: "",
-                nickname: "",
-                avatar: "",
-                motto: "",
+                id: '',
+                username: '',
+                nickname: '',
+                avatar: '',
+                motto: '',
                 lastLogin: 0
             },
             edit: {
@@ -96,23 +94,20 @@ export default {
         };
     },
     methods: {
-        init() {
+        async Init() {
             if (this.$route.params.user == "") {
                 this.$Message.error("Username couldn't be empty.");
                 this.$router.push("/");
             } else {
-                this.$store.dispatch("account/getInfo", {
-                    username: this.$route.params.user,
-                    callback: (rsp, err) => {
-                        if (rsp.data.total) {
+                let rsp = await this.$store.dispatch("account/getInfo", this.$route.params.user);
+                if (rsp.data.total) {
                             this.info = rsp.data.data[0];
                             this.$util.title(this.info.nickname);
-                        } else {
-                            this.$Message.error("Username was not exist.");
-                            this.$router.push("/");
-                        }
+                    } else {
+                        this.$Message.error("Username was not exist.");
+                        this.$router.push("/");
                     }
-                });
+                }
             }
         },
         handleSuccess(res, file) {
@@ -132,31 +127,25 @@ export default {
                 });
             }
         },
-        submitForm(info, name) {
-            info.id = this.info.id;
-            info.username = this.info.username;
-            this.$store.dispatch("account/set", {
-                info,
-                callback: (rsp, err) => {
+        async submitForm(info, name) {
+            try {
+                info.id = this.info.id;
+                info.username = this.info.username;
+                let rsp = await this.$store.dispatch("account/set", info);
                 if (rsp && rsp.state == 0) {
                     this.$Message.success(`Update ${name} Success!`);
                     this.info = rsp.data;
+                    if (name == 'Nickname')
+                        this.$util.title(this.info.nickname);
                 } else {
-                    err = (err && err.message) || rsp.msg;
-                    this.$Message.error(err);
+                    this.$root.message($m.ERROR, rsp.msg);
                 }
-                }
-            });
+            } catch (err) {
+                this.$root.message($m.ERROR, err.message);
+            }
         },
-        logoutAccount() {
-            this.$store.dispatch("account/logout", (rsp, err) => {
-                if (!rsp || rsp.state != 0) {
-                    err = (err && err.message) || rsp.msg;
-                    return;
-                }
-                this.$router.push('/');
-            });
-        },
+        async logoutAccount() {
+	    this.$router.push('/login');
     },
     computed: {
         isCurrentUser() {
@@ -166,16 +155,17 @@ export default {
             let img =
                 this.info.avatar.indexOf("http") == 0
                 ? this.info.avatar
-                : config.file.fileurl + this.info.avatar;
-            return this.info.avatar ? img : "/img/user.png";
+                : this.$config.file.fileurl + this.info.avatar;
+            return this.info.avatar ? img : "/res/user.png";
         },
         uploadInterface() {
             return "/api/lib/upload";
         }
     },
     watch: {
-        $router: (to, from) => {
-            this.init();
+        $route(to, from) {
+            console.log(to)
+            this.Init();
         }
     }
 };
