@@ -32,8 +32,8 @@ app.use(robots({ UserAgent: '*', Disallow: '/' }));
 app.use(favicon(path.join(__dirname, 'frontend', 'assets', 'favicon.ico')));
 app.use(partials());
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: '2048kb' }));
+app.use(bodyParser.urlencoded({ limit: '2048kb', extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
@@ -51,7 +51,7 @@ app.use('/api', api);
 
 // 其他页面交给vue处理
 app.use(function (req, res/*, next*/) {
-    res.sendfile('public/index.html');
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // error handler
